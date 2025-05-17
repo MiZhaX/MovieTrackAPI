@@ -46,6 +46,14 @@ Route::get('/setup', function(){
 });
 
 Route::get('/run-migrations', function () {
-    Artisan::call('migrate', ['--force' => true]);
-    return "Migraciones ejecutadas.";
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return response()->json(['message' => 'Migraciones ejecutadas correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error ejecutando migraciones: '.$e->getMessage());
+        return response()->json([
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
 });
