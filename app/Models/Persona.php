@@ -5,39 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Produccion extends Model
+class Persona extends Model
 {
     use HasFactory;
-
-    protected $table = 'producciones';
+    protected $table = 'personas';
     protected $primaryKey = 'id'; 
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
-        'titulo',
-        'tipo',
-        'genero_id',
-        'sinopsis',
-        'duracion',
-        'fecha_estreno',
-        'poster',
-        'puntuacion_critica',
-        'puntuacion_usuarios'
+        'nombre',
+        'fecha_nacimiento',
+        'biografia',
     ];
 
     /**
-     * Get the genero that owns the Produccion
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function genero()
-    {
-        return $this->belongsTo(Genero::class); 
-    }
-
-    /**
-     * Get all of the actores for the Produccion
+     * Get all of the actores for the Persona
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -47,7 +30,7 @@ class Produccion extends Model
     }
 
     /**
-     * Get all of the directores for the Produccion
+     * Get all of the directores for the Persona
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

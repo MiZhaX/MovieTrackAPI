@@ -23,4 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers', 'middleware' => 'auth:sanctum'], function(){
     Route::apiResource('producciones', ProduccionController::class);
     Route::apiResource('generos', GeneroController::class);
+    Route::apiResource('personas', GeneroController::class);
+    Route::apiResource('directores', GeneroController::class);
+    Route::apiResource('actores', GeneroController::class);
 });

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('produccion', function (Blueprint $table) {
+        Schema::create('producciones', function (Blueprint $table) {
             $table->id();
             $table->string('titulo', 255);
             $table->enum('tipo', ['Pelicula', 'Serie']);
