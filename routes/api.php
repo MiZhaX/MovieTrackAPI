@@ -20,15 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('v1')->group(function () {
-    Route::get('producciones', [ProduccionController::class, 'index']);
-    Route::get('producciones/{produccion}', [ProduccionController::class, 'show']);
-
-    Route::get('generos', [GeneroController::class, 'index']);
-    Route::get('generos/{genero}', [GeneroController::class, 'show']);
-});
-
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers', 'middleware' => 'auth:sanctum'], function(){
-    Route::apiResource('producciones', ProduccionController::class)->except(['index', 'show']);
-    Route::apiResource('generos', GeneroController::class)->except(['index', 'show']);
+    Route::apiResource('producciones', ProduccionController::class);
+    Route::apiResource('generos', GeneroController::class);
 });
