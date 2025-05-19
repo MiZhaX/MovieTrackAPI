@@ -28,7 +28,7 @@ Route::prefix('v1')->group(function () {
     Route::get('generos/{genero}', [GeneroController::class, 'show']);
 });
 
-Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers', 'middleware' => 'auth:sanctum'], function(){
     Route::apiResource('producciones', ProduccionController::class)->except(['index', 'show']);
     Route::apiResource('generos', GeneroController::class)->except(['index', 'show']);
 });
