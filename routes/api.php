@@ -22,10 +22,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     Route::get('producciones', [ProduccionController::class, 'index']);
+    Route::get('producciones/{produccion}', [ProduccionController::class, 'show']);
+
     Route::get('generos', [GeneroController::class, 'index']);
+    Route::get('generos/{genero}', [GeneroController::class, 'show']);
 });
 
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
-    Route::apiResource('producciones', ProduccionController::class)->except(['index']);
-    Route::apiResource('generos', GeneroController::class)->except(['index']);
+    Route::apiResource('producciones', ProduccionController::class)->except(['index', 'show']);
+    Route::apiResource('generos', GeneroController::class)->except(['index', 'show']);
 });
