@@ -41,7 +41,6 @@ class GeneroController extends Controller
     public function store(StoreGeneroRequest $request)
     {
         //
-        dd('ENTRÓ EN STORE');
         return new GeneroResource(Genero::create($request->all()));
     }
 
