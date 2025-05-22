@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GeneroResource extends JsonResource
+class DirectorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,11 +15,8 @@ class GeneroResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id' => $this->id,
-            'nombre' => $this->nombre,
-            'producciones' => $this->whenLoaded('producciones', function () {
-                return ProduccionResource::collection($this->producciones);
-            }),
+            'director' => PersonaResource::make($this->whenLoaded('persona')),
+            'produccion' => ProduccionResource::make($this->whenLoaded('produccion'))
         ];
     }
 }

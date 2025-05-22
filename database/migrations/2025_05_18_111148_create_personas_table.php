@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('personas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            $table->string('nombre')->unique();
             $table->date('fecha_nacimiento');
             $table->text('biografia');
             $table->timestamps();

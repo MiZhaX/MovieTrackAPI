@@ -13,7 +13,8 @@ class StorePersonaRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $user = $this->user();
+        return $user != null && $user->tokenCan('create');
     }
 
     /**
@@ -24,7 +25,9 @@ class StorePersonaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nombre' => 'required|string|max:255',
+            'fecha_nacimiento' => 'required|date',
+            'biografia' => 'required|string|max:1000',
         ];
     }
 }

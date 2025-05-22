@@ -1,29 +1,51 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProduccionController;
 use App\Http\Controllers\GeneroController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\ActorController;
+use App\Http\Controllers\DirectorController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+// 🟢 RUTAS PÚBLICAS (solo lectura)
+Route::prefix('v1')->group(function () {
+    Route::get('producciones', [ProduccionController::class, 'index']);
+    Route::get('producciones/{produccion}', [ProduccionController::class, 'show']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::get('generos', [GeneroController::class, 'index']);
+    Route::get('generos/{genero}', [GeneroController::class, 'show']);
+
+    Route::get('personas', [PersonaController::class, 'index']);
+    Route::get('personas/{persona}', [PersonaController::class, 'show']);
+
+    Route::get('actores', [ActorController::class, 'index']);
+
+    Route::get('directores', [DirectorController::class, 'index']);
 });
 
-Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers', 'middleware' => 'auth:sanctum'], function(){
-    Route::apiResource('producciones', ProduccionController::class);
-    Route::apiResource('generos', GeneroController::class);
-    Route::apiResource('personas', GeneroController::class);
-    Route::apiResource('directores', GeneroController::class);
-    Route::apiResource('actores', GeneroController::class);
+// 🔐 RUTAS PROTEGIDAS (requieren auth:sanctum)
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+    Route::apiResource('producciones', ProduccionController::class)->except(['index', 'show']);
+    Route::post('producciones/bulk', [ProduccionController::class, 'bulkStore']);
+
+    Route::apiResource('generos', GeneroController::class)->except(['index', 'show']);
+    Route::post('generos/bulk', [GeneroController::class, 'bulkStore']);
+
+    Route::apiResource('personas', PersonaController::class)->except(['index', 'show']);
+    Route::post('personas/bulk', [PersonaController::class, 'bulkStore']);
+
+    Route::post('directores', [DirectorController::class, 'store']);
+    Route::post('directores/bulk', [DirectorController::class, 'bulkStore']);
+    // Route::get('directores/{persona_id}/{produccion_id}', [DirectorController::class, 'show']);
+    Route::put('directores/{persona_id}/{produccion_id}', [DirectorController::class, 'update']);
+    Route::patch('directores/{persona_id}/{produccion_id}', [DirectorController::class, 'update']);
+    Route::delete('directores/{persona_id}/{produccion_id}', [DirectorController::class, 'destroy']);
+
+    Route::post('actores', [ActorController::class, 'store']);
+    Route::post('actores/bulk', [ActorController::class, 'bulkStore']);
+    // Route::get('actores/{persona_id}/{produccion_id}', [ActorController::class, 'show']);
+    Route::put('actores/{persona_id}/{produccion_id}', [ActorController::class, 'update']);
+    Route::patch('actores/{persona_id}/{produccion_id}', [ActorController::class, 'update']);
+    Route::delete('actores/{persona_id}/{produccion_id}', [ActorController::class, 'destroy']);
+
 });

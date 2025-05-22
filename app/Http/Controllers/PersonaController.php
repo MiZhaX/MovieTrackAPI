@@ -7,6 +7,9 @@ use App\Models\Persona;
 use App\Http\Requests\StorePersonaRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdatePersonaRequest;
+use App\Http\Resources\PersonaCollection;
+use App\Http\Resources\PersonaResource;
+use Illuminate\Support\Facades\Validator;
 
 class PersonaController extends Controller
 {
@@ -17,7 +20,11 @@ class PersonaController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        $filter = new PersonaFilter();
+        $queryItems = $filter->transform($request);
+
+        $personas = Persona::where($queryItems);
+        return new PersonaCollection($personas->paginate()->appends($request->query()));
     }
 
     /**
@@ -39,6 +46,42 @@ class PersonaController extends Controller
     public function store(StorePersonaRequest $request)
     {
         //
+        return new PersonaResource(Persona::create($request->all()));
+    }
+
+    public function bulkStore(Request $request)
+    {
+        $user = request()->user();
+
+        if (!$user || !$user->tokenCan('create')) {
+            return response()->json(['error' => 'No tienes permiso para realizar esta acción'], 403);
+        }
+
+        $data = $request->all();
+
+        // Validar que sea un array de elementos
+        if (!is_array($data)) {
+            return response()->json(['error' => 'El formato debe ser un array de objetos.'], 422);
+        }
+
+        foreach ($data as $index => $item) {
+            $validator = Validator::make($item, [
+                'nombre' => 'required|string|max:255',
+                'fecha_nacimiento' => 'required|date',
+                'biografia' => 'required|string|max:1000'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => "Error en el elemento $index",
+                    'details' => $validator->errors()
+                ], 422);
+            }
+        }
+
+        $inserted = Persona::insert($data); 
+
+        return response()->json(['message' => 'Personas insertadas correctamente.'], 201);
     }
 
     /**
@@ -47,9 +90,19 @@ class PersonaController extends Controller
      * @param  \App\Models\Persona  $persona
      * @return \Illuminate\Http\Response
      */
-    public function show(Persona $persona)
+    public function show($id)
     {
         //
+        $persona = Persona::with([
+            'actores.produccion',
+            'directores.produccion'
+        ])->find($id); 
+    
+        if (!$persona) {
+            return response()->json(['error' => 'Persona no encontrada'], 404);
+        }
+    
+        return new PersonaResource($persona);
     }
 
     /**
@@ -70,9 +123,18 @@ class PersonaController extends Controller
      * @param  \App\Models\Persona  $persona
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePersonaRequest $request, Persona $persona)
+    public function update(UpdatePersonaRequest $request, $id)
     {
         //
+        $persona = Persona::find($id);
+        if (!$persona) {
+            return response()->json(['error' => 'Persona no encontrada'], 404);
+        }
+
+        $validatedData = $request->validated(); 
+        $persona->update($validatedData); 
+
+        return new PersonaResource($persona);
     }
 
     /**
@@ -81,8 +143,21 @@ class PersonaController extends Controller
      * @param  \App\Models\Persona  $persona
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Persona $persona)
+    public function destroy($id)
     {
         //
+        $user = request()->user();
+
+        if (!$user || !$user->tokenCan('delete')) {
+            return response()->json(['error' => 'No tienes permiso para realizar esta acción'], 403);
+        }
+
+        $persona = Persona::find($id);
+        if (!$persona) {
+            return response()->json(['error' => 'Persona no encontrada'], 404);
+        }
+
+        $persona->delete();
+        return response()->json(['message' => 'Persona eliminada correctamente'], 200);
     }
 }

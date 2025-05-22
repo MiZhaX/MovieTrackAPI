@@ -13,7 +13,8 @@ class StoreDirectorRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $user = $this->user();
+        return $user != null && $user->tokenCan('create');
     }
 
     /**
@@ -24,7 +25,8 @@ class StoreDirectorRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'persona_id' => 'required|exists:personas,id',
+            'produccion_id' => 'required|exists:producciones,id'
         ];
     }
 }

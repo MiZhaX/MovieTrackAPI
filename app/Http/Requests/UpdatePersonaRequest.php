@@ -13,7 +13,8 @@ class UpdatePersonaRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $user = $this->user();
+        return $user != null && $user->tokenCan('update');
     }
 
     /**
@@ -23,8 +24,21 @@ class UpdatePersonaRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if($method == 'PUT'){
+            return [
+                'nombre' => 'required|string|max:255',
+                'fecha_nacimiento' => 'required|date',
+                'biografia' => 'required|string|max:1000'
+            ];
+        }
+        else {
+            return [
+                'nombre' => 'sometimes|string|max:255',
+                'fecha_nacimiento' => 'sometimes|date',
+                'biografia' => 'sometimes|string|max:1000'
+            ];   
+        }
     }
 }

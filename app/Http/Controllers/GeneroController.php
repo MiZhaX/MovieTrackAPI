@@ -7,6 +7,9 @@ use App\Http\Requests\StoreGeneroRequest;
 use App\Http\Requests\UpdateGeneroRequest;
 use App\Http\Resources\GeneroCollection;
 use App\Http\Resources\GeneroResource;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class GeneroController extends Controller
 {
@@ -15,10 +18,14 @@ class GeneroController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $generos = Genero::paginate();
+        $includeProducciones = $request->query('includeProducciones');
+
+        $generos = $includeProducciones
+            ? Genero::with('producciones')->paginate()
+            : Genero::paginate();
+
         return new GeneroCollection($generos);
     }
 
@@ -42,6 +49,39 @@ class GeneroController extends Controller
     {
         //
         return new GeneroResource(Genero::create($request->all()));
+    }
+
+    public function bulkStore(Request $request)
+    {
+        $user = request()->user();
+
+        if (!$user || !$user->tokenCan('create')) {
+            return response()->json(['error' => 'No tienes permiso para realizar esta acción'], 403);
+        }
+
+        $data = $request->all();
+
+        // Validar que sea un array de elementos
+        if (!is_array($data)) {
+            return response()->json(['error' => 'El formato debe ser un array de objetos.'], 422);
+        }
+
+        foreach ($data as $index => $item) {
+            $validator = Validator::make($item, [
+                'nombre' => 'required|string|max:255|unique:generos,nombre',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => "Error en el elemento $index",
+                    'details' => $validator->errors()
+                ], 422);
+            }
+        }
+
+        $inserted = Genero::insert($data); 
+
+        return response()->json(['message' => 'Generos insertados correctamente.'], 201);
     }
 
     /**

@@ -13,7 +13,8 @@ class UpdateDirectorRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $user = $this->user();
+        return $user != null && $user->tokenCan('update');
     }
 
     /**
@@ -23,8 +24,19 @@ class UpdateDirectorRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if($method == 'PUT'){
+            return [
+                'persona_id' => 'required|exists:personas,id',
+                'produccion_id' => 'required|exists:producciones,id'
+            ];
+        }
+        else {
+            return [
+                'persona_id' => 'sometimes|exists:personas,id',
+                'produccion_id' => 'sometimes|exists:producciones,id'
+            ];   
+        }
     }
 }

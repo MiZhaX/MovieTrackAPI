@@ -43,7 +43,7 @@ class Produccion extends Model
      */
     public function actores()
     {
-        return $this->hasMany(Actor::class);
+        return $this->hasMany(Actor::class); 
     }
 
     /**
@@ -53,6 +53,6 @@ class Produccion extends Model
      */
     public function directores()
     {
-        return $this->hasMany(Director::class);
+        return $this->hasMany(Director::class); 
     }
 }

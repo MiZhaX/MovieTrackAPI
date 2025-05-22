@@ -13,7 +13,8 @@ class UpdateActorRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $user = $this->user();
+        return $user != null && $user->tokenCan('update');
     }
 
     /**
@@ -23,8 +24,21 @@ class UpdateActorRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if($method == 'PUT'){
+            return [
+                'persona_id' => 'required|exists:personas,id',
+                'produccion_id' => 'required|exists:producciones,id',
+                'rol' => 'required|string|max:255',
+            ];
+        }
+        else {
+            return [
+                'persona_id' => 'sometimes|exists:personas,id',
+                'produccion_id' => 'sometimes|exists:producciones,id',
+                'rol' => 'sometimes|string|max:255',
+            ];   
+        }
     }
 }

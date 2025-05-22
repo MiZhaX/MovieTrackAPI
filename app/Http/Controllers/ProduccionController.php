@@ -9,6 +9,8 @@ use App\Http\Resources\ProduccionCollection;
 use App\Filters\ProduccionFilter;
 use App\Http\Resources\ProduccionResource;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class ProduccionController extends Controller
 {
@@ -23,12 +25,9 @@ class ProduccionController extends Controller
         $filter = new ProduccionFilter();
         $queryItems = $filter->transform($request);
 
-        $includeGeneros = $request->query('includeGeneros');
-
         $producciones = Produccion::where($queryItems);
-        if($includeGeneros){
-            $producciones = $producciones->with('genero');
-        }
+        $producciones = $producciones->with('genero');
+
         return new ProduccionCollection($producciones->paginate()->appends($request->query()));
     }
 
@@ -54,6 +53,47 @@ class ProduccionController extends Controller
         return new ProduccionResource(Produccion::create($request->all()));
     }
 
+    public function bulkStore(Request $request)
+    {
+        $user = request()->user();
+
+        if (!$user || !$user->tokenCan('create')) {
+            return response()->json(['error' => 'No tienes permiso para realizar esta acción'], 403);
+        }
+
+        $data = $request->all();
+
+        // Validar que sea un array de elementos
+        if (!is_array($data)) {
+            return response()->json(['error' => 'El formato debe ser un array de objetos.'], 422);
+        }
+
+        foreach ($data as $index => $item) {
+            $validator = Validator::make($item, [
+                'titulo' => 'required|string|max:255',
+                'tipo' => ['required', 'string', Rule::in(['pelicula', 'serie'])],
+                'genero_id' => 'required|exists:generos,id',
+                'sinopsis' => 'required|string|max:1000',
+                'duracion' => 'required|integer|min:1',
+                'fecha_estreno' => 'required|date',
+                'poster' => 'required|string|max:255',
+                'puntuacion_critica' => 'required|numeric|min:0|max:10',
+                'puntuacion_usuarios' => 'required|numeric|min:0|max:5'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => "Error en el elemento $index",
+                    'details' => $validator->errors()
+                ], 422);
+            }
+        }
+
+        $inserted = Produccion::insert($data); 
+
+        return response()->json(['message' => 'Producciones insertadas correctamente.'], 201);
+    }
+
     /**
      * Display the specified resource.
      *
@@ -62,15 +102,16 @@ class ProduccionController extends Controller
      */
     public function show($id)
     {
-        $produccion = Produccion::find($id); 
+        $produccion = Produccion::with([
+            'genero',
+            'actores.persona',
+            'directores.persona'
+        ])->find($id);
+
         if (!$produccion) {
-            return response()->json(['error' => 'Produccion no encontrada'], 404);
+            return response()->json(['error' => 'Producción no encontrada'], 404);
         }
 
-        $includeGeneros = request()->query('includeGeneros');
-        if ($includeGeneros) {
-            $produccion->load('genero'); 
-        }
         return new ProduccionResource($produccion);
     }
 
@@ -99,10 +140,10 @@ class ProduccionController extends Controller
             return response()->json(['error' => 'Producción no encontrada'], 404);
         }
 
-        $validatedData = $request->validated(); 
-        $produccion->update($validatedData); 
+        $validatedData = $request->validated();
+        $produccion->update($validatedData);
 
-        return new ProduccionResource($produccion); 
+        return new ProduccionResource($produccion);
     }
 
     /**

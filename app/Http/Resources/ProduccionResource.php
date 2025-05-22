@@ -19,12 +19,14 @@ class ProduccionResource extends JsonResource
             'titulo' => $this->titulo,
             'tipo' => $this->tipo,
             'sinopsis' => $this->sinopsis,
-            'duracion'=> $this->duracion,
+            'duracion' => $this->duracion,
             'fecha_estreno' => $this->fecha_estreno,
             'poster' => $this->poster,
             'puntuacion_critica' => $this->puntuacion_critica,
             'puntuacion_usuarios' => $this->puntuacion_usuarios,
-            'genero' => new GeneroResource($this->whenLoaded('genero'))
+            'genero' => new GeneroResource($this->whenLoaded('genero')),
+            'actores' => ActorResource::collection($this->whenLoaded('actores')),
+            'directores' => DirectorResource::collection($this->whenLoaded('directores')),
         ];
     }
 }
