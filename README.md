@@ -1,66 +1,119 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 🎬 MovieTrack API
 
-## About Laravel
+API RESTful para la gestión de producciones audiovisuales (películas y series), géneros, actores, directores y personas. Desarrollada en Laravel 10.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Funcionalidades actuales
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 📁 Producciones
+- Listar todas las producciones (paginadas y filtrables).
+- Ver detalles de una producción.
+- Crear, actualizar y eliminar producciones.
+- Cada producción tiene:
+  - Título, tipo (película/serie), género, sinopsis, duración, fecha de estreno, poster, puntuaciones de crítica y usuarios.
+  - Relaciones con actores, director y género.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🏷️ Géneros
+- Listado público de todos los géneros.
+- Crear géneros de forma individual o masiva (bulk).
+- Actualizar y eliminar géneros.
+- Relación uno a muchos con Producciones.
 
-## Learning Laravel
+### 👥 Personas
+- Listar y ver información detallada de personas.
+- Consultar si una persona es actor o director, y sus producciones relacionadas.
+- Crear, actualizar y eliminar personas.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🎭 Actores
+- Listado de actores con sus respectivos roles y producciones asociadas.
+- Crear, actualizar y eliminar actores.
+- Inserción masiva (bulk) soportada.
+- La relación entre actor y producción es compuesta (`persona_id`, `produccion_id`).
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🎬 Directores
+- Listado de directores con las producciones que han dirigido.
+- Crear, actualizar y eliminar directores.
+- Relación compuesta similar a actores.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛡️ Autenticación
 
-## Laravel Sponsors
+La API utiliza **Laravel Sanctum** para autenticar acciones sensibles como:
+- Crear, editar o eliminar recursos (excepto los listados públicos).
+- Se requieren permisos específicos como `create` y `delete` en los tokens de acceso.
+- Ruta '/setup' para obtener tokens de prueba.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## 📦 Estructura de rutas
 
-### Premium Partners
+```
+GET    /api/v1/producciones
+GET    /api/v1/producciones/{id}
+POST   /api/v1/producciones (auth)
+PUT    /api/v1/producciones/{id} (auth)
+DELETE /api/v1/producciones/{id} (auth)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+GET    /api/v1/generos
+GET    /api/v1/generos/{id}
+POST   /api/v1/generos         (auth)
+POST   /api/v1/generos/bulk    (auth)
+PUT    /api/v1/generos/{id}    (auth)
+DELETE /api/v1/generos/{id}    (auth)
 
-## Contributing
+GET    /api/v1/personas
+GET    /api/v1/personas/{id}
+POST   /api/v1/personas        (auth)
+PUT    /api/v1/personas/{id}   (auth)
+DELETE /api/v1/personas/{id}   (auth)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+GET    /api/v1/actores
+GET    /api/v1/actores/{persona_id}/{produccion_id}
+POST   /api/v1/actores         (auth)
+POST   /api/v1/actores/bulk    (auth)
+PUT    /api/v1/actores/{persona_id}/{produccion_id} (auth)
+DELETE /api/v1/actores/{persona_id}/{produccion_id} (auth)
 
-## Code of Conduct
+GET    /api/v1/directores
+POST   /api/v1/directores      (auth)
+PUT    /api/v1/directores/{persona_id}/{produccion_id} (auth)
+DELETE /api/v1/directores/{persona_id}/{produccion_id} (auth)
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## ⚙️ Instalación
 
-## Security Vulnerabilities
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/tuusuario/movietrack-api.git
+   cd movietrack-api
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. Instala dependencias:
+   ```bash
+   composer install
+   ```
 
-## License
+3. Copia el archivo `.env` y configura tu base de datos:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+4. Ejecuta migraciones:
+   ```bash
+   php artisan migrate
+   ```
+
+5. Inicia el servidor:
+   ```bash
+   php artisan serve
+   ```
+
+## 🧪 Pruebas con Postman
+
+Puedes probar la API localmente en:  
+`http://127.0.0.1:8000/api/v1/`
+
+---
+
+## 🧑‍💻 Autor
+
+Desarrollado por Mishael Bonel Ortiz
+Proyecto para el TFG de **Desarrollo de Aplicaciones Web**
