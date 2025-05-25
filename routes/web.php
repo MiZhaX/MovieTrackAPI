@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,8 +16,10 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return ['Laravel' => app()->version()];
 });
+
+require __DIR__.'/auth.php';
 
 Route::get('/setup', function(){
     $credential = [
@@ -35,25 +36,8 @@ Route::get('/setup', function(){
     if (Auth::attempt($credential)) {
         $user = Auth::user();
         $adminToken = $user->createToken('admin-token', ['create', 'update', 'delete']);
-        $loggedUserToken = $user->createToken('loggedUser-token', ['update']);
-        $guestToken = $user->createToken('guest-token');
         return [
             'admin' => $adminToken->plainTextToken,
-            'loggedUser' => $loggedUserToken->plainTextToken,
-            'guest' => $guestToken->plainTextToken
         ];
-    }
-});
-
-Route::get('/run-migrations', function () {
-    try {
-        Artisan::call('migrate', ['--force' => true]);
-        return response()->json(['message' => 'Migraciones ejecutadas correctamente.']);
-    } catch (\Exception $e) {
-        Log::error('Error ejecutando migraciones: '.$e->getMessage());
-        return response()->json([
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ], 500);
     }
 });
