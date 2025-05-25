@@ -55,4 +55,14 @@ class Produccion extends Model
     {
         return $this->hasMany(Director::class); 
     }
+
+    /**
+     * Get all of the resenas for the Produccion
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function resenas()
+    {
+        return $this->hasMany(Resena::class); 
+    }
 }

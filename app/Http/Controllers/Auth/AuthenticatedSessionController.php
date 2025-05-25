@@ -21,7 +21,7 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        $token = $user->createToken('loggedUser', ['update'])->plainTextToken;
+        $token = $user->createToken('loggedUser', ['updateResenas','createResena'])->plainTextToken;
 
         return response()->json([
             'message' => 'Inicio de sesión exitoso',

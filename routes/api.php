@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\ResenaController;
 
 // 🟢 RUTAS PÚBLICAS (solo lectura)
 Route::prefix('v1')->group(function () {
@@ -28,19 +29,26 @@ Route::prefix('v1')->group(function () {
     Route::get('actores', [ActorController::class, 'index']);
 
     Route::get('directores', [DirectorController::class, 'index']);
+
+    Route::get('resenas', [ResenaController::class, 'index']);
+    Route::get('resenas/{resena}', [ResenaController::class, 'show']);
 });
 
 // 🔐 RUTAS PROTEGIDAS (requieren auth:sanctum)
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+    // PRODUCCIONES
     Route::apiResource('producciones', ProduccionController::class)->except(['index', 'show']);
     Route::post('producciones/bulk', [ProduccionController::class, 'bulkStore']);
 
+    // GENEROS
     Route::apiResource('generos', GeneroController::class)->except(['index', 'show']);
     Route::post('generos/bulk', [GeneroController::class, 'bulkStore']);
 
+    // PERSONAS
     Route::apiResource('personas', PersonaController::class)->except(['index', 'show']);
     Route::post('personas/bulk', [PersonaController::class, 'bulkStore']);
 
+    // DIRECTORES
     Route::post('directores', [DirectorController::class, 'store']);
     Route::post('directores/bulk', [DirectorController::class, 'bulkStore']);
     // Route::get('directores/{persona_id}/{produccion_id}', [DirectorController::class, 'show']);
@@ -48,12 +56,16 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::patch('directores/{persona_id}/{produccion_id}', [DirectorController::class, 'update']);
     Route::delete('directores/{persona_id}/{produccion_id}', [DirectorController::class, 'destroy']);
 
+    // ACTORES
     Route::post('actores', [ActorController::class, 'store']);
     Route::post('actores/bulk', [ActorController::class, 'bulkStore']);
     // Route::get('actores/{persona_id}/{produccion_id}', [ActorController::class, 'show']);
     Route::put('actores/{persona_id}/{produccion_id}', [ActorController::class, 'update']);
     Route::patch('actores/{persona_id}/{produccion_id}', [ActorController::class, 'update']);
     Route::delete('actores/{persona_id}/{produccion_id}', [ActorController::class, 'destroy']);
+
+    // RESEÑAS
+    Route::apiResource('resenas', ResenaController::class)->except(['index', 'show']);
 });
 
 // 🛡️ RUTAS DE AUTENTICACIÓN
