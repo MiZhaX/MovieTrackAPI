@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('producciones', function (Blueprint $table) {
-            $table->id()->unique();
+            $table->id();
             $table->string('titulo', 255);
             $table->enum('tipo', ['Pelicula', 'Serie']);
             $table->foreignId('genero_id')->constrained('generos');
