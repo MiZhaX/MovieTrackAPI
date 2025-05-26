@@ -24,7 +24,7 @@ class PersonaResource extends JsonResource
                 return $this->actores->map(function ($actor) {
                     return [
                         'rol' => $actor->rol,
-                        'produccion' => new ActorResource($actor->produccion)
+                        'produccion' => new ProduccionResource($actor->produccion)
                     ];
                 });
             }),
