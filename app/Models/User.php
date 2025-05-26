@@ -51,4 +51,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Resena::class); 
     }
+
+    /**
+     * Get all of the marcarProduccion for the Produccion
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function marcarProduccion()
+    {
+        return $this->hasMany(Resena::class); 
+    }
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\MarcarProduccionesController;
 use App\Http\Controllers\ResenaController;
 
 // 🟢 RUTAS PÚBLICAS (solo lectura)
@@ -66,6 +67,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // RESEÑAS
     Route::apiResource('resenas', ResenaController::class)->except(['index', 'show']);
+
+    // MARCAR PRODUCCIONES
+    Route::apiResource('marcarProducciones', MarcarProduccionesController::class);
 });
 
 // 🛡️ RUTAS DE AUTENTICACIÓN
