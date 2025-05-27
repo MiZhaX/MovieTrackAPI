@@ -53,12 +53,22 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all of the marcarProduccion for the Produccion
+     * Get all of the marcarProduccion for the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function marcarProduccion()
     {
-        return $this->hasMany(Resena::class); 
+        return $this->hasMany(MarcarProducciones::class); 
+    }
+
+    /**
+     * Get all of the listasPersonalizadas for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function listasPersonalizadas()
+    {
+        return $this->hasMany(ListaPersonalizada::class); 
     }
 }

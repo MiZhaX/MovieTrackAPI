@@ -58,7 +58,7 @@ class MarcarProduccionesController extends Controller
      * @param  \App\Models\MarcarProducciones  $marcarProducciones
      * @return \Illuminate\Http\Response
      */
-    public function show(MarcarProducciones $marcarProducciones, $id)
+    public function show($id)
     {
         $user = request()->user();
         $marcarProducciones = MarcarProducciones::with([

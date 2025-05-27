@@ -75,4 +75,14 @@ class Produccion extends Model
     {
         return $this->hasMany(Resena::class); 
     }
+
+    /**
+     * Get all of the marcarProduccion for the Produccion
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function produccionLista()
+    {
+        return $this->hasMany(ProduccionLista::class); 
+    }
 }
