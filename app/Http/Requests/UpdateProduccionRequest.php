@@ -27,9 +27,10 @@ class UpdateProduccionRequest extends FormRequest
     {
         $method = $this->method();
 
-        if($method == 'PUT'){
+        if ($method == 'PUT') {
             return [
                 'titulo' => 'required|string|max:255',
+                'titulo_original' => 'required|string|max:255',
                 'tipo' => ['required', 'string', Rule::in(['pelicula', 'serie'])],
                 'genero_id' => 'required|exists:generos,id',
                 'sinopsis' => 'required|string|max:1000',
@@ -39,11 +40,11 @@ class UpdateProduccionRequest extends FormRequest
                 'puntuacion_critica' => 'required|numeric|min:0|max:10',
                 'puntuacion_usuarios' => 'required|numeric|min:0|max:5'
             ];
-        }
-        else {
+        } else {
             return [
                 'titulo' => 'sometimes|required|string|max:255',
-                'tipo' => ['sometimes','required', 'string', Rule::in(['pelicula', 'serie'])],
+                'titulo_original' => 'sometimes|string|max:255',
+                'tipo' => ['sometimes', 'required', 'string', Rule::in(['pelicula', 'serie'])],
                 'genero_id' => 'sometimes|required|exists:generos,id',
                 'sinopsis' => 'sometimes|required|string|max:1000',
                 'duracion' => 'sometimes|required|integer|min:1',
@@ -51,7 +52,7 @@ class UpdateProduccionRequest extends FormRequest
                 'poster' => 'sometimes|required|string|max:255',
                 'puntuacion_critica' => 'sometimes|required|numeric|min:0|max:10',
                 'puntuacion_usuarios' => 'sometimes|required|numeric|min:0|max:5'
-            ];   
+            ];
         }
     }
 }

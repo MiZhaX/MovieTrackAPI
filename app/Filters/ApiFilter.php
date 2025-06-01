@@ -1,31 +1,49 @@
 <?php
+
 namespace App\Filters;
+
 use Illuminate\Http\Request;
 
-class ApiFilter {
+class ApiFilter
+{
 
     protected $safeParams = [];
     protected $columnMap = [];
     protected $operatorMap = [];
 
-    public function transform(Request $request) {
-        $eloQuery = [];
-
-        foreach($this->safeParams as $parm => $operators){
-            $query = $request->query($parm);
-            if(!isset($query)) {
+    public function transform(Request $request, $query)
+    {
+        foreach ($this->safeParams as $parm => $operators) {
+            $value = $request->query($parm);
+            if (!isset($value)) {
                 continue;
             }
 
             $column = $this->columnMap[$parm] ?? $parm;
-            foreach($operators as $operator){
-                if(isset($query[$operator])) {
-                    $eloQuery[] = [$column, $this->operatorMap[$operator], $query[$operator]];
+
+            foreach ($operators as $operator) {
+                if (!isset($value[$operator])) {
+                    continue;
+                }
+
+                $operatorSymbol = $this->operatorMap[$operator];
+
+                if ($column === 'titulo' && $operatorSymbol === 'like') {
+                    $query->where(function ($subquery) use ($value, $operatorSymbol) {
+                        $likeValue = '%' . $value['like'] . '%';
+                        $subquery->where('titulo', $operatorSymbol, $likeValue)
+                            ->orWhere('titulo_original', $operatorSymbol, $likeValue);
+                    });
+                } else {
+                    $filterValue = $operatorSymbol === 'like'
+                        ? '%' . $value[$operator] . '%'
+                        : $value[$operator];
+
+                    $query->where($column, $operatorSymbol, $filterValue);
                 }
             }
         }
 
-        return $eloQuery;
+        return $query;
     }
-
 }

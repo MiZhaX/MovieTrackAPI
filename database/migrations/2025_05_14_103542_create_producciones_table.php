@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('producciones', function (Blueprint $table) {
             $table->id();
             $table->string('titulo', 255);
+            $table->string('titulo_original', 255);
             $table->enum('tipo', ['Pelicula', 'Serie']);
             $table->foreignId('genero_id')->constrained('generos');
             $table->text('sinopsis');

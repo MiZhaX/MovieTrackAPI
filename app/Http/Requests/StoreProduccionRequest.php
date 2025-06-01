@@ -28,6 +28,7 @@ class StoreProduccionRequest extends FormRequest
         return [
             //
             'titulo' => 'required|string|max:255',
+            'titulo_original' => 'required|string|max:255',
             'tipo' => ['required', 'string', Rule::in(['pelicula', 'serie'])],
             'genero_id' => 'required|exists:generos,id',
             'sinopsis' => 'required|string|max:1000',

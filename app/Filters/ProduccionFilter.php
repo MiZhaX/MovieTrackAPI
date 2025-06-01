@@ -6,7 +6,8 @@ use App\Filters\ApiFilter;
 class ProduccionFilter extends ApiFilter {
 
     protected $safeParams = [
-        'titulo' => ['eq'],
+        'titulo' => ['eq', 'like'],
+        'titulo_original' => ['eq', 'like'],
         'tipo' => ['eq'],
         'genero_id' => ['eq'],
         'duracion' => ['eq', 'gt', 'lt'],
@@ -20,7 +21,8 @@ class ProduccionFilter extends ApiFilter {
         'lt' => '<',
         'lte' => '<=',
         'gt' => '>',
-        'gte' => '>='
+        'gte' => '>=',
+        'like' => 'like'
     ];
 
 }

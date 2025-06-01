@@ -17,6 +17,7 @@ class ProduccionResource extends JsonResource
         return [
             'id' => $this->id,
             'titulo' => $this->titulo,
+            'titulo_original' => $this->titulo_original,
             'tipo' => $this->tipo,
             'sinopsis' => $this->sinopsis,
             'duracion' => $this->duracion,

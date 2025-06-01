@@ -23,9 +23,9 @@ class ProduccionController extends Controller
     {
         //
         $filter = new ProduccionFilter();
-        $queryItems = $filter->transform($request);
-
-        $producciones = Produccion::where($queryItems);
+        $query = Produccion::query();
+        
+        $producciones = $filter->transform($request, $query);
         $producciones = $producciones->with('genero');
 
         return new ProduccionCollection($producciones->paginate()->appends($request->query()));
@@ -89,7 +89,7 @@ class ProduccionController extends Controller
             }
         }
 
-        $inserted = Produccion::insert($data); 
+        $inserted = Produccion::insert($data);
 
         return response()->json(['message' => 'Producciones insertadas correctamente.'], 201);
     }
