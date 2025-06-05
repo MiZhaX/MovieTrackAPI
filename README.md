@@ -8,10 +8,7 @@ API RESTful para la gestión de producciones audiovisuales (películas y series)
 ### 📁 Producciones
 - Listar todas las producciones (paginadas y filtrables).
 - Ver detalles de una producción.
-- Crear, actualizar y eliminar producciones.
-- Cada producción tiene:
-  - Título, tipo (película/serie), género, sinopsis, duración, fecha de estreno, poster, puntuaciones de crítica y usuarios.
-  - Relaciones con actores, director y género.
+- Inserción masiva (bulk) soportada.
 
 ### 🏷️ Géneros
 - Listado de todos los géneros.
@@ -67,6 +64,7 @@ La API utiliza **Laravel Sanctum** para autenticar acciones sensibles como:
 --------- OBTENER/AÑADIR/MODIFICAR/ELIMINAR UNA PRODUCCIÓN ---------
 GET    /api/v1/producciones
 GET    /api/v1/producciones/{id}
+GET    /api/v1/producciones/{id}?detalles=true //Lista los detalles de la producción (actores y director)
 POST   /api/v1/producciones (auth)
 PUT    /api/v1/producciones/{id} (auth)
 PATCH  /api/v1/producciones/{id} (auth)
