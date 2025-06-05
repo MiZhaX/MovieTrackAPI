@@ -44,6 +44,16 @@ API RESTful para la gestión de producciones audiovisuales (películas y series)
 - Al iniciar sesión, con tu token personal, podrás acceder a todas la funciones de la web.
 - Ruta '/api/user' para obtener la información del usuario a través de su token.
 
+### 👁️‍🗨️ MarcarProducciones
+- El usuario podrá marcar las producciones como 'Visualizada' o como 'Quiero ver'.
+- Además, el usuario también podrá marcar una producción como favorita.
+- Para poder marcar una produccion, se debe haber iniciado sesión previamente.
+
+### 📑 ListasPersonalizadas
+- El usuario puede crear una lista personalizada con un nombre y una descripción.
+- Se pueden añadir producciones a las listas personalizadas.
+- Forma de que el usuario guarde y organice sus peliculas favoritas de la mejor manera.
+
 ## 🛡️ Autenticación
 
 La API utiliza **Laravel Sanctum** para autenticar acciones sensibles como:
@@ -54,6 +64,7 @@ La API utiliza **Laravel Sanctum** para autenticar acciones sensibles como:
 ## 📦 Estructura de rutas
 
 ```
+--------- OBTENER/AÑADIR/MODIFICAR/ELIMINAR UNA PRODUCCIÓN ---------
 GET    /api/v1/producciones
 GET    /api/v1/producciones/{id}
 POST   /api/v1/producciones (auth)
@@ -61,6 +72,7 @@ PUT    /api/v1/producciones/{id} (auth)
 PATCH  /api/v1/producciones/{id} (auth)
 DELETE /api/v1/producciones/{id} (auth)
 
+--------- OBTENER/AÑADIR/MODIFICAR/ELIMINAR UN GENERO ---------
 GET    /api/v1/generos
 GET    /api/v1/generos/{id}
 POST   /api/v1/generos         (auth)
@@ -69,6 +81,7 @@ PUT    /api/v1/generos/{id}    (auth)
 PATCH  /api/v1/generos/{id}    (auth)
 DELETE /api/v1/generos/{id}    (auth)
 
+--------- OBTENER/AÑADIR/MODIFICAR/ELIMINAR UNA PERSONA ---------
 GET    /api/v1/personas
 GET    /api/v1/personas/{id}
 POST   /api/v1/personas        (auth)
@@ -77,18 +90,21 @@ PUT    /api/v1/personas/{id}   (auth)
 PATCH  /api/v1/personas/{id}   (auth)
 DELETE /api/v1/personas/{id}   (auth)
 
+--------- OBTENER/AÑADIR/MODIFICAR/ELIMINAR UN ACTOR ---------
 GET    /api/v1/actores
 POST   /api/v1/actores         (auth)
 POST   /api/v1/actores/bulk    (auth)
 PUT    /api/v1/actores/{persona_id}/{produccion_id} (auth)
 DELETE /api/v1/actores/{persona_id}/{produccion_id} (auth)
 
+--------- OBTENER/AÑADIR/MODIFICAR/ELIMINAR UN DIRECTOR ---------
 GET    /api/v1/directores
 POST   /api/v1/directores      (auth)
 POST   /api/v1/directores/bulk (auth)
 PUT    /api/v1/directores/{persona_id}/{produccion_id} (auth)
 DELETE /api/v1/directores/{persona_id}/{produccion_id} (auth)
 
+--------- OBTENER/AÑADIR/MODIFICAR/ELIMINAR UNA RESEÑA ---------
 GET    /api/v1/resenas
 GET    /api/v1/resenas/{id}
 POST   /api/v1/resenas         (auth)
@@ -96,6 +112,26 @@ PUT    /api/v1/resenas/{id}    (auth)
 PATCH  /api/v1/resenas/{id}    (auth)
 DELETE /api/v1/resenas/{id}    (auth)
 
+--------- OBTENER/AÑADIR/MODIFICAR/ELIMINAR LA MARCA DE UNA PRODUCCION ---------
+GET    /api/v1/marcarProducciones         (auth)
+GET    /api/v1/marcarProducciones/{id}    (auth)
+POST   /api/v1/marcarProducciones         (auth)
+PUT    /api/v1/marcarProducciones/{id}    (auth)
+DELETE /api/v1/marcarProducciones/{id}    (auth)
+
+--------- OBTENER/AÑADIR/MODIFICAR/ELIMINAR UNA LISTA PERSONALIZADA ---------
+GET    /api/v1/listasPersonalizadas         (auth)
+GET    /api/v1/listasPersonalizadas/{id}    (auth)
+POST   /api/v1/listasPersonalizadas         (auth)
+PUT    /api/v1/listasPersonalizadas/{id}    (auth)
+DELETE /api/v1/listasPersonalizadas/{id}    (auth)
+
+--------- OBTENER/AÑADIR/ELIMINAR PRODUCCIÓN A UNA LISTA PERSONALIZADA ---------
+GET    /api/v1/produccionesListas         (auth)
+POST   /api/v1/produccionesListas         (auth)
+DELETE /api/v1/produccionesListas/{id}    (auth)
+
+--------- AUTENTICACIÓN DE USUARIOS ---------
 POST   /api/register
 POST   /api/login
 POST   /api/logout             (auth)
