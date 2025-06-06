@@ -272,33 +272,6 @@ paths:
         '404':
           description: Género no encontrado
 
-    patch:
-      summary: Actualizar parcialmente un género
-      tags: [Géneros]
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Genero'
-      responses:
-        '200':
-          description: Género actualizado parcialmente
-        '400':
-          description: Datos inválidos
-        '401':
-          description: No autorizado
-        '404':
-          description: Género no encontrado
-
     delete:
       summary: Eliminar un género
       tags: [Géneros]
