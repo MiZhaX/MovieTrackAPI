@@ -11,7 +11,7 @@ class ApiFilter
     protected $columnMap = [];
     protected $operatorMap = [];
 
-    public function transform(Request $request, $query)
+    public function transform(Request $request, $query = null)
     {
         foreach ($this->safeParams as $parm => $operators) {
             $value = $request->query($parm);
