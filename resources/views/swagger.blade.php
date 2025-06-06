@@ -12,7 +12,7 @@
   <script>
     window.onload = () => {
       SwaggerUIBundle({
-        url: "{{ asset('swagger.yaml') }}",
+        url: "https://movietrackapi.up.railway.app/swagger.yaml",
         dom_id: '#swagger-ui',
       });
     };
