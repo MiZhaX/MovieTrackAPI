@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: MovieTrack API
   version: 1.0.0
-  description: API REST para gestión de películas, series, géneros, personas, actores, directores, reseñas y listas personalizadas. DOCUMENTACIÓN EN PROCESO (De momento disponible Producciones y Géneros)
+  description: API REST para gestión de películas, series, géneros, personas, actores, directores, reseñas y listas personalizadas. DOCUMENTACIÓN EN PROCESO (Disponible Producciones, Géneros, Personas, Actores y Directores)
 
 servers:
   - url: https://movietrackapi.up.railway.app/api/v1
@@ -290,6 +290,358 @@ paths:
           description: No autorizado
         '404':
           description: Género no encontrado
+          
+  /personas:
+    get:
+      summary: Obtener todas las personas
+      tags: [Personas]
+      parameters:
+        - in: query
+          name: nombre[eq]
+          schema:
+            type: string
+          description: Filtrar personas por nombre
+      responses:
+        '200':
+          description: Lista de personas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Persona'
+    post:
+      summary: Crear una nueva persona
+      tags: [Personas]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Persona'
+      responses:
+        '201':
+          description: Persona creada correctamente
+        '401':
+          description: No autorizado
+          
+  /personas/bulk:
+    post:
+      summary: Crear múltiples personas
+      tags: [Personas]
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Lista de personas a insertar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Persona'
+      responses:
+        '201':
+          description: Personas creadas correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+
+  /personas/{id}:
+    get:
+      summary: Obtener una persona por ID
+      tags: [Personas]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Persona encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Persona'
+        '404':
+          description: Persona no encontrada
+
+    put:
+      summary: Actualizar completamente una persona
+      tags: [Personas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Persona'
+      responses:
+        '200':
+          description: Persona actualizada correctamente
+        '404':
+          description: Persona no encontrada
+        '401':
+          description: No autorizado
+
+    patch:
+      summary: Actualizar parcialmente una persona
+      tags: [Personas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Persona'
+      responses:
+        '200':
+          description: Persona actualizada parcialmente
+        '404':
+          description: Persona no encontrada
+        '401':
+          description: No autorizado
+
+    delete:
+      summary: Eliminar una persona
+      tags: [Personas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Persona eliminada correctamente
+        '404':
+          description: Persona no encontrada
+        '401':
+          description: No autorizado
+
+  /actores:
+    get:
+      summary: Obtener todos los actores
+      tags: [Actores]
+      responses:
+        '200':
+          description: Lista de actores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Actor'
+    post:
+      summary: Crear un nuevo actor
+      tags: [Actores]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Actor'
+      responses:
+        '201':
+          description: Actor creado
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+
+  /actores/bulk:
+    post:
+      summary: Crear múltiples actores
+      tags: [Actores]
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Lista de actores a insertar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Actor'
+      responses:
+        '201':
+          description: Actor creadas correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+
+  /actores/{id}:
+    put:
+      summary: Actualizar un actor
+      tags: [Actores]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Actor'
+      responses:
+        '200':
+          description: Actor actualizado correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+        '404':
+          description: Actor no encontrado
+
+    delete:
+      summary: Eliminar un actor
+      tags: [Actores]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Actor eliminado
+        '401':
+          description: No autorizado
+        '404':
+          description: Actor no encontrado
+          
+  /directores:
+    get:
+      summary: Obtener todos los directores
+      tags: [Directores]
+      responses:
+        '200':
+          description: Lista de directores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Director'
+    post:
+      summary: Crear un nuevo director
+      tags: [Directores]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Director'
+      responses:
+        '201':
+          description: Director creado
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+
+  /directores/bulk:
+    post:
+      summary: Crear múltiples directores
+      tags: [Directores]
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Lista de directores a insertar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Director'
+      responses:
+        '201':
+          description: Directores creados correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+
+  /directores/{id}:
+    put:
+      summary: Actualizar un director
+      tags: [Directores]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Director'
+      responses:
+        '200':
+          description: Director actualizado correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+        '404':
+          description: Director no encontrado
+
+    delete:
+      summary: Eliminar un director
+      tags: [Directores]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Director eliminado
+        '401':
+          description: No autorizado
+        '404':
+          description: Director no encontrado
 
 components:
   securitySchemes:
