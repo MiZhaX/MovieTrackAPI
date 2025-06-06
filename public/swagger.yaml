@@ -1,0 +1,405 @@
+openapi: 3.0.3
+info:
+  title: MovieTrack API
+  version: 1.0.0
+  description: API REST para gestión de películas, series, géneros, personas, actores, directores, reseñas y listas personalizadas. DOCUMENTACIÓN EN PROCESO (De momento disponible Producciones y Géneros)
+
+servers:
+  - url: https://movietrackapi.up.railway.app/api/v1
+    description: Producción
+
+paths:
+
+  /producciones:
+    get:
+      summary: Obtener todas las producciones
+      tags: [Producciones]
+      parameters:
+        - in: query
+          name: tipo[eq]
+          schema:
+            type: string
+            enum: [pelicula, serie]
+          description: Filtrar producciones por tipo
+        - in: query
+          name: titulo[like]
+          schema:
+            type: string
+          description: Filtrar por coincidencia parcial en el título o título original
+      responses:
+        '200':
+          description: Lista de producciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produccion'
+    post:
+      summary: Crear una nueva producción
+      tags: [Producciones]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produccion'
+      responses:
+        '201':
+          description: Producción creada correctamente
+        '401':
+          description: No autorizado
+          
+  /producciones/bulk:
+    post:
+      summary: Crear múltiples producciones
+      tags: [Producciones]
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Lista de producciones a insertar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Produccion'
+      responses:
+        '201':
+          description: Producciones creadas correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+
+  /producciones/{id}:
+    get:
+      summary: Obtener una producción por ID
+      tags: [Producciones]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: detalles
+          required: false
+          schema:
+            type: boolean
+          description: Incluir actores y director de la producción
+      responses:
+        '200':
+          description: Producción encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produccion'
+        '404':
+          description: Producción no encontrada
+
+    put:
+      summary: Actualizar completamente una producción
+      tags: [Producciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produccion'
+      responses:
+        '200':
+          description: Producción actualizada correctamente
+        '404':
+          description: Producción no encontrada
+        '401':
+          description: No autorizado
+
+    patch:
+      summary: Actualizar parcialmente una producción
+      tags: [Producciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produccion'
+      responses:
+        '200':
+          description: Producción actualizada parcialmente
+        '404':
+          description: Producción no encontrada
+        '401':
+          description: No autorizado
+
+    delete:
+      summary: Eliminar una producción
+      tags: [Producciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Producción eliminada correctamente
+        '404':
+          description: Producción no encontrada
+        '401':
+          description: No autorizado
+          
+  /generos:
+    get:
+      summary: Obtener todos los géneros
+      tags: [Géneros]
+      responses:
+        '200':
+          description: Lista de géneros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Genero'
+    post:
+      summary: Crear un nuevo género
+      tags: [Géneros]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genero'
+      responses:
+        '201':
+          description: Género creado
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+  
+  /generos/bulk:
+    post:
+      summary: Crear múltiples géneros
+      tags: [Géneros]
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Lista de géneros a insertar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Genero'
+      responses:
+        '201':
+          description: Géneros creados correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+
+  /generos/{id}:
+    get:
+      summary: Obtener un género por ID
+      tags: [Géneros]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Género encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genero'
+        '404':
+          description: Género no encontrado
+
+    put:
+      summary: Actualizar un género (reemplazo total)
+      tags: [Géneros]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genero'
+      responses:
+        '200':
+          description: Género actualizado correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+        '404':
+          description: Género no encontrado
+
+    patch:
+      summary: Actualizar parcialmente un género
+      tags: [Géneros]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genero'
+      responses:
+        '200':
+          description: Género actualizado parcialmente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+        '404':
+          description: Género no encontrado
+
+    delete:
+      summary: Eliminar un género
+      tags: [Géneros]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Género eliminado
+        '401':
+          description: No autorizado
+        '404':
+          description: Género no encontrado
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Produccion:
+      type: object
+      required: [titulo, tipo, genero_id, sinopsis, duracion, fecha_estreno, poster, puntuacion_critica, puntuacion_usuarios]
+      properties:
+        titulo: { type: string }
+        titulo_original: { type: string }
+        tipo: { type: string, enum: [Pelicula, Serie] }
+        genero_id: { type: integer }
+        sinopsis: { type: string }
+        duracion: { type: integer }
+        fecha_estreno: { type: string, format: date }
+        poster: { type: string }
+        puntuacion_critica: { type: number }
+        puntuacion_usuarios: { type: number }
+
+    Genero:
+      type: object
+      required: [nombre]
+      properties:
+        nombre: { type: string }
+
+    Persona:
+      type: object
+      required: [nombre, fecha_nacimiento, biografia]
+      properties:
+        nombre: { type: string }
+        fecha_nacimiento: { type: string, format: date }
+        biografia: { type: string }
+
+    Actor:
+      type: object
+      required: [persona_id, produccion_id, rol]
+      properties:
+        persona_id: { type: integer }
+        produccion_id: { type: integer }
+        rol: { type: string }
+        
+    Director:
+      type: object
+      required: [persona_id, produccion_id]
+      properties:
+        persona_id: { type: integer }
+        produccion_id: { type: integer }
+        
+    Resena:
+      type: object
+      required: [usuario_id, produccion_id, puntuacion]
+      properties:
+        usuario_id: { type: integer }
+        produccion_id: { type: integer }
+        puntuacion: { type: integer }
+        descripcion: { type: string }
+        
+    MarcarProducciones:
+      type: object
+      required: [usuario_id, produccion_id]
+      properties:
+        usuario_id: { type: integer }
+        produccion_id: { type: integer }
+        marca: { type: boolean, enum: [Visto (0), Quiero Ver (1)] }
+        favorita: { type: boolean }
+        
+    ListaPersonalizada:
+      type: object
+      required: [nombre, usuario_id]
+      properties:
+        nombre: { type: string }
+        usuario_id: { type: integer }
+        descripcion: { type: string }
+
+    ProduccionLista:
+      type: object
+      required: [lista_personalizada_id, produccion_id]
+      properties:
+        lista_personalizada_id: { type: integer }
+        produccion_id: { type: integer }
+        
