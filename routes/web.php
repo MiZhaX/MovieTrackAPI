@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Hash;
 */
 
 Route::get('/', function () {
-    return ['Laravel' => app()->version()];
+    return view('swagger');
 });
 
 require __DIR__.'/auth.php';
