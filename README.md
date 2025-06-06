@@ -136,39 +136,12 @@ POST   /api/logout             (auth)
 GET    /api/user               (auth)
 ```
 
-## ⚙️ Instalación
-
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/MiZhaX/movietrack-api.git
-   cd movietrack-api
-   ```
-
-2. Instala dependencias:
-   ```bash
-   composer install
-   ```
-
-3. Copia el archivo `.env` y configura tu base de datos:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-
-4. Ejecuta migraciones:
-   ```bash
-   php artisan migrate
-   ```
-
-5. Inicia el servidor:
-   ```bash
-   php artisan serve
-   ```
+## 📰 Documentación con Swagger
+Al entrar en la URL en producción, verás la documentación realizada con Swagger y podrás probar la API con una interfaz gráfica
 
 ## 🧪 Pruebas con Postman
 
-Puedes probar la API localmente en:  
-`http://127.0.0.1:8000/api/v1/`
+Puedes probar la API en:  `https://movietrackapi.up.railway.app/api/v1/`
 
 ---
 
