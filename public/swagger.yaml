@@ -7,6 +7,8 @@ info:
 servers:
   - url: https://movietrackapi.up.railway.app/api/v1
     description: Producción
+  - url: https://movietrackapi.up.railway.app/api
+    description: Usuarios
 
 paths:
 
@@ -643,6 +645,303 @@ paths:
         '404':
           description: Director no encontrado
 
+  /resenas:
+    get:
+      summary: Obtener todas las reseñas
+      tags: [Reseñas]
+      parameters:
+        - in: query
+          name: usuario_id[eq]
+          schema:
+            type: integer
+          description: Filtrar reseñas por usuario
+        - in: query
+          name: produccion_id[eq]
+          schema:
+            type: integer
+          description: Filtrar reseñas por produccion
+      responses:
+        '200':
+          description: Lista de reseñas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Resena'
+    post:
+      summary: Crear una nueva reseña
+      tags: [Reseñas]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resena'
+      responses:
+        '201':
+          description: Reseña creada
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado
+
+  /resenas/{id}:
+    get:
+      summary: Obtener una reseña por ID
+      tags: [Reseñas]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Reseña encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resena'
+        '404':
+          description: Reseña no encontrada
+
+    put:
+      summary: Actualizar una Reseña (reemplazo total)
+      tags: [Reseñas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resena'
+      responses:
+        '200':
+          description: Reseña actualizada correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado // El código de usuario no coincide con tu usuario
+        '404':
+          description: Reseña no encontrada
+          
+    patch:
+      summary: Actualizar parcialmente una reseña
+      tags: [Reseñas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resena'
+      responses:
+        '200':
+          description: Reseña actualizada parcialmente
+        '404':
+          description: Reseña no encontrada
+        '401':
+          description: No autorizado // El código de usuario no coincide con tu usuario
+
+    delete:
+      summary: Eliminar una reseña
+      tags: [Reseñas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Reseña eliminada
+        '401':
+          description: No autorizado // El código de usuario no coincide con tu usuario
+        '404':
+          description: Reseña no encontrada
+          
+  /marcarProducciones:
+    post:
+      summary: Crear una nueva marca
+      tags: [Marcar Producciones]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarcarProducciones'
+      responses:
+        '201':
+          description: Marca creada
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado // El código de usuario no coincide con tu usuario
+
+  /marcarProducciones/{id}:
+    get:
+      summary: Obtener una marca por ID
+      tags: [Marcar Producciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Marca encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarcarProducciones'
+        '404':
+          description: Marca no encontrada
+        '401':
+          description: No autorizado // El código de usuario no coincide con tu usuario
+
+    put:
+      summary: Actualizar una Marca (reemplazo total)
+      tags: [Marcar Producciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarcarProducciones'
+      responses:
+        '200':
+          description: Marca actualizada correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado // El código de usuario no coincide con tu usuario
+        '404':
+          description: Marca no encontrada
+          
+    patch:
+      summary: Actualizar parcialmente una marca
+      tags: [Marcar Producciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarcarProducciones'
+      responses:
+        '200':
+          description: Marca actualizada parcialmente
+        '404':
+          description: Marca no encontrada
+        '401':
+          description: No autorizado // El código de usuario no coincide con tu usuario
+
+    delete:
+      summary: Eliminar una marca
+      tags: [Marcar Producciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Marca eliminada
+        '401':
+          description: No autorizado // El código de usuario no coincide con tu usuario
+        '404':
+          description: Marca no encontrada
+
+  /register:
+    post:
+      summary: Registrar un nuevo usuario
+      tags: [Usuarios]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevoUsuario'
+      responses:
+        '201':
+          description: Usuario creada
+        '400':
+          description: Datos inválidos
+  
+  /login:
+    post:
+      summary: Iniciar sesión con un usuario
+      tags: [Usuarios]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+      responses:
+        '201':
+          description: Sesión Iniciada
+        '400':
+          description: Correo o contraseña incorrectos
+  
+  /user:
+    get:
+      summary: Obtener los datos del usuario por token
+      tags: [Usuarios]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NuevoUsuario'
+        '404':
+          description: Usuario no encontrado
+
 components:
   securitySchemes:
     bearerAuth:
@@ -710,7 +1009,7 @@ components:
       properties:
         usuario_id: { type: integer }
         produccion_id: { type: integer }
-        marca: { type: boolean, enum: [Visto (0), Quiero Ver (1)] }
+        marca: { type: string, enum: [0 (Visto), 1 (Quiero Ver)] }
         favorita: { type: boolean }
         
     ListaPersonalizada:
@@ -728,3 +1027,17 @@ components:
         lista_personalizada_id: { type: integer }
         produccion_id: { type: integer }
         
+    NuevoUsuario:
+      type: object
+      required: [name, email, password]
+      properties:
+        name: { type: string }
+        email: { type: string }
+        password: { type: string }
+        
+    Usuario:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string }
+        password: { type: string }
