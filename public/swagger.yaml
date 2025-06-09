@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: MovieTrack API
   version: 1.0.0
-  description: API REST para gestión de películas, series, géneros, personas, actores, directores, reseñas y listas personalizadas. DOCUMENTACIÓN EN PROCESO (Disponible Producciones, Géneros, Personas, Actores y Directores)
+  description: API REST para gestión de películas, series, géneros, personas, actores, directores, reseñas y listas personalizadas.
 
 servers:
   - url: https://movietrackapi.up.railway.app/api/v1
@@ -731,7 +731,7 @@ paths:
         '400':
           description: Datos inválidos
         '401':
-          description: No autorizado // El código de usuario no coincide con tu usuario
+          description: No autorizado // La reseña no pertenece a tu usuario
         '404':
           description: Reseña no encontrada
           
@@ -758,7 +758,7 @@ paths:
         '404':
           description: Reseña no encontrada
         '401':
-          description: No autorizado // El código de usuario no coincide con tu usuario
+          description: No autorizado // La reseña no pertenece a tu usuario
 
     delete:
       summary: Eliminar una reseña
@@ -775,7 +775,7 @@ paths:
         '204':
           description: Reseña eliminada
         '401':
-          description: No autorizado // El código de usuario no coincide con tu usuario
+          description: No autorizado // La reseña no pertenece a tu usuario
         '404':
           description: Reseña no encontrada
           
@@ -821,8 +821,7 @@ paths:
         '404':
           description: Marca no encontrada
         '401':
-          description: No autorizado // El código de usuario no coincide con tu usuario
-
+          description: No autorizado // La marca no pertenece a tu usuario
     put:
       summary: Actualizar una Marca (reemplazo total)
       tags: [Marcar Producciones]
@@ -846,35 +845,10 @@ paths:
         '400':
           description: Datos inválidos
         '401':
-          description: No autorizado // El código de usuario no coincide con tu usuario
+          description: No autorizado // La marca no pertenece a tu usuario
         '404':
           description: Marca no encontrada
           
-    patch:
-      summary: Actualizar parcialmente una marca
-      tags: [Marcar Producciones]
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MarcarProducciones'
-      responses:
-        '200':
-          description: Marca actualizada parcialmente
-        '404':
-          description: Marca no encontrada
-        '401':
-          description: No autorizado // El código de usuario no coincide con tu usuario
-
     delete:
       summary: Eliminar una marca
       tags: [Marcar Producciones]
@@ -890,9 +864,190 @@ paths:
         '204':
           description: Marca eliminada
         '401':
-          description: No autorizado // El código de usuario no coincide con tu usuario
+          description: No autorizado // La marca no pertenece a tu usuario
         '404':
           description: Marca no encontrada
+
+  /listasPersonalizadas:
+    post:
+      summary: Crear una nueva lista personalizada
+      tags: [Listas Personalizadas]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListaPersonalizada'
+      responses:
+        '201':
+          description: Lista creada
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado // El código de usuario no coincide con tu usuario
+
+  /listasPersonalizadas/{id}:
+    get:
+      summary: Obtener una lista por ID
+      tags: [Listas Personalizadas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListaPersonalizada'
+        '404':
+          description: Lista no encontrada
+        '401':
+          description: No autorizado // La lista no pertenece a tu usuario
+
+    put:
+      summary: Actualizar una Lista (reemplazo total)
+      tags: [Listas Personalizadas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListaPersonalizada'
+      responses:
+        '200':
+          description: Lista actualizada correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado // La lista no pertenece a tu usuario
+        '404':
+          description: Lista no encontrada
+    
+    patch:
+      summary: Actualizar una Lista
+      tags: [Listas Personalizadas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListaPersonalizada'
+      responses:
+        '200':
+          description: Lista actualizada correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado // La lista no pertenece a tu usuario
+        '404':
+          description: Lista no encontrada
+          
+    delete:
+      summary: Eliminar una lista personalizada
+      tags: [Listas Personalizadas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Lista eliminada
+        '401':
+          description: No autorizado // La lista no pertenece a tu usuario
+        '404':
+          description: Lista no encontrada
+          
+  /produccionesListas:
+    get:
+      summary: Obtener todas las producciones de una lista
+      tags: [Producciones Listas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: lista_personalizada_is[eq]
+          required: true
+          schema:
+            type: integer
+          description: Id de la Lista Personalizada
+      responses:
+        '200':
+          description: Lista de reseñas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProduccionLista'
+        '401':
+          description: No autorizado // La lista no pertenece a tu usuario
+          
+    post:
+      summary: Añadir una produccion a una lista personalizada
+      tags: [Producciones Listas]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProduccionLista'
+      responses:
+        '201':
+          description: Produccion añadida correctamente
+        '400':
+          description: Datos inválidos
+        '401':
+          description: No autorizado // La lista no pertenece a tu usuario
+
+  /produccionesListas/{id}:
+    delete:
+      summary: Eliminar una produccion de una lista personalizada
+      tags: [Producciones Listas]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Lista eliminada
+        '401':
+          description: No autorizado // La lista no pertenece a tu usuario
+        '404':
+          description: Lista no encontrada
 
   /register:
     post:
@@ -1029,11 +1184,12 @@ components:
         
     NuevoUsuario:
       type: object
-      required: [name, email, password]
+      required: [name, email, password, password_confirmation]
       properties:
         name: { type: string }
         email: { type: string }
         password: { type: string }
+        password_confirmation: { type: string }
         
     Usuario:
       type: object
