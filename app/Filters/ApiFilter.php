@@ -11,7 +11,35 @@ class ApiFilter
     protected $columnMap = [];
     protected $operatorMap = [];
 
-    public function transform(Request $request, $query = null)
+    public function transform(Request $request) {
+        $query = [];
+
+        foreach ($this->safeParams as $param => $operators) {
+            $value = $request->query($param);
+            if (!isset($value)) {
+                continue;
+            }
+
+            $column = $this->columnMap[$param] ?? $param;
+
+            foreach ($operators as $operator) {
+                if (!isset($value[$operator])) {
+                    continue;
+                }
+
+                $operatorSymbol = $this->operatorMap[$operator];
+                $filterValue = $operatorSymbol === 'like'
+                    ? '%' . $value[$operator] . '%'
+                    : $value[$operator];
+
+                $query[] = [$column, $operatorSymbol, $filterValue];
+            }
+        }
+
+        return $query;
+    }
+
+    public function transformProduction(Request $request, $query = null)
     {
         foreach ($this->safeParams as $parm => $operators) {
             $value = $request->query($parm);
@@ -28,6 +56,7 @@ class ApiFilter
 
                 $operatorSymbol = $this->operatorMap[$operator];
 
+                // Filtro para el titulo de las producciones
                 if ($column === 'titulo' && $operatorSymbol === 'like') {
                     $query->where(function ($subquery) use ($value, $operatorSymbol) {
                         $likeValue = '%' . $value['like'] . '%';

@@ -64,16 +64,16 @@ class MarcarProduccionesController extends Controller
         $marcarProducciones = MarcarProducciones::with([
             'usuario',
             'produccion'
-        ])->find($id); 
+        ])->find($id);
 
         if ($marcarProducciones->usuario_id != $user->id) {
             return response()->json(['error' => 'Esta marca no pertenece a tu usuario'], 403);
         }
-    
+
         if (!$marcarProducciones) {
             return response()->json(['error' => 'Marca no encontrada'], 404);
         }
-    
+
         return new MarcarProduccionesResource($marcarProducciones);
     }
 
@@ -103,16 +103,16 @@ class MarcarProduccionesController extends Controller
             return response()->json(['error' => 'Marca no encontrada'], 404);
         }
 
-        if(!$user->tokenCan('create')){
+        if (!$user->tokenCan('create')) {
             if ($marca->usuario_id != $user->id) {
                 return response()->json(['error' => 'Esta marca no pertenece a tu usuario'], 403);
             }
         }
 
-        $validatedData = $request->validated(); 
-        $marca->update($validatedData); 
+        $validatedData = $request->validated();
+        $marca->update($validatedData);
 
-        return new MarcarProduccionesResource($marca); 
+        return new MarcarProduccionesResource($marca);
     }
 
     /**

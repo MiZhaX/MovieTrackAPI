@@ -25,7 +25,7 @@ class ProduccionController extends Controller
         $filter = new ProduccionFilter();
         $query = Produccion::query();
         
-        $producciones = $filter->transform($request, $query);
+        $producciones = $filter->transformProduction($request, $query);
         $producciones = $producciones->with('genero');
 
         return new ProduccionCollection($producciones->paginate()->appends($request->query()));

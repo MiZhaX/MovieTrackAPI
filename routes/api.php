@@ -75,7 +75,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // LISTAS PERSONALIZADAS
     Route::apiResource('listasPersonalizadas', ListaPersonalizadaController::class);
-    
+
     // PRODUCCIONES LISTAS
     Route::apiResource('produccionesListas', ProduccionListaController::class);
 });
@@ -87,7 +87,9 @@ Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->
 Route::post('/reset-password', [NewPasswordController::class, 'store'])->middleware('guest')->name('password.store');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {return $request->user();});
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
     Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)->middleware(['auth', 'signed', 'throttle:6,1'])->name('verification.verify');
     Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth')->name('logout');

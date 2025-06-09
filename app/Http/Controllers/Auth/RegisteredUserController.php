@@ -19,25 +19,35 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): JsonResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+    { {
+            $messages = [
+                'name.required' => 'El nombre es obligatorio.',
+                'email.required' => 'El correo es obligatorio.',
+                'email.email' => 'El correo debe ser válido.',
+                'email.unique' => 'El correo ya está registrado.',
+                'password.required' => 'La contraseña es obligatoria.',
+                'password.confirmed' => 'Las contraseñas no coinciden.',
+            ];
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ], $messages);
 
-        event(new Registered($user));
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        Auth::login($user);
+            event(new Registered($user));
 
-        return response()->json([
-            'user' => $user
-        ]);
+            Auth::login($user);
+
+            return response()->json([
+                'user' => $user
+            ]);
+        }
     }
 }
