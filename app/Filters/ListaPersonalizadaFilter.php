@@ -6,6 +6,7 @@ use App\Filters\ApiFilter;
 class ListaPersonalizadaFilter extends ApiFilter {
 
     protected $safeParams = [
+        'id' => ['eq'],
         'nombre' => ['eq'],
         'usuario_id' => ['eq']
     ];
