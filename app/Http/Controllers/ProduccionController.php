@@ -32,6 +32,27 @@ class ProduccionController extends Controller
     }
 
     /**
+     * Display a listing of the top ten productions by Crítica.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function topCritica(Request $request)
+    {
+        $filter = new ProduccionFilter();
+        $queryItems = $filter->transform($request);
+    
+        $producciones = Produccion::where($queryItems)
+            ->orderByDesc('puntuacion_critica')
+            ->limit(10);
+    
+        if ($request->query('includeGeneros')) {
+            $producciones->with('genero');
+        }
+    
+        return ProduccionResource::collection($producciones->get());
+    }
+    
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
