@@ -70,16 +70,16 @@ class ListaPersonalizadaController extends Controller
     public function show($id)
     {
         $user = request()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Debes iniciar sesión para ver una lista de reproducción'], 403);
+        }
+        
         $lista = ListaPersonalizada::with([
             'produccionesListas'
         ])->find($id); 
 
         if (!$lista) {
             return response()->json(['error' => 'Lista no encontrada'], 404);
-        }
-
-        if ($lista->usuario_id != $user->id) {
-            return response()->json(['error' => 'Esta lista no pertenece a tu usuario'], 403);
         }
     
         return new ListaPersonalizadaResource($lista);
