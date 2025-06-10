@@ -73,7 +73,7 @@ class ListaPersonalizadaController extends Controller
         if (!$user) {
             return response()->json(['error' => 'Debes iniciar sesión para ver una lista de reproducción'], 403);
         }
-        
+
         $lista = ListaPersonalizada::with([
             'produccionesListas'
         ])->find($id); 
@@ -133,7 +133,7 @@ class ListaPersonalizadaController extends Controller
     {
         $user = request()->user();
 
-        if (!$user || !$user->tokenCan('delete')) {
+        if (!$user || !$user->tokenCan('eliminarProduccionLista')) {
             return response()->json(['error' => 'No tienes permiso para realizar esta acción'], 403);
         }
 
