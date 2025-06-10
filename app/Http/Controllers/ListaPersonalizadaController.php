@@ -142,6 +142,8 @@ class ListaPersonalizadaController extends Controller
             return response()->json(['error' => 'Lista no encontrada'], 404);
         }
 
+        $lista->produccionesListas()->delete();
+
         $lista->delete();
         return response()->json(['message' => 'Lista eliminada correctamente'], 200);
     }

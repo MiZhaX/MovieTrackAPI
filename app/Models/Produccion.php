@@ -74,7 +74,7 @@ class Produccion extends Model
      */
     public function marcarProduccion()
     {
-        return $this->hasMany(Resena::class); 
+        return $this->hasMany(MarcarProducciones::class); 
     }
 
     /**
