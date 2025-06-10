@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('lista_personalizada_id')->constrained('listas_personalizadas');
             $table->foreignId('produccion_id')->constrained('producciones');
             $table->timestamps();
+            $table->unique(['lista_personalizada_id', 'produccion_id']);
         });
     }
 
