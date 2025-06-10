@@ -95,7 +95,7 @@ class ProduccionListaController extends Controller
     {
         $user = request()->user();
 
-        if (!$user || !$user->tokenCan('delete' || !$user->tokenCan('eliminarProduccionLista'))) {
+        if (!$user || !$user->tokenCan('delete') || !$user->tokenCan('eliminarProduccionLista')) {
             return response()->json(['error' => 'No tienes permiso para realizar esta acción'], 403);
         }
 
