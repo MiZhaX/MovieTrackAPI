@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProduccionListaRequest;
 use App\Http\Requests\UpdateProduccionListaRequest;
 use App\Http\Resources\ProduccionListaCollection;
 use App\Http\Resources\ProduccionListaResource;
+use App\Filters\ProduccionListaFilter;
 use Illuminate\Http\Request;
 
 class ProduccionListaController extends Controller
@@ -18,7 +19,7 @@ class ProduccionListaController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = new ProduccionLista();
+        $filter = new ProduccionListaFilter();
         $queryItems = $filter->transform($request);
 
         $produccionesListas = ProduccionLista::where($queryItems)
