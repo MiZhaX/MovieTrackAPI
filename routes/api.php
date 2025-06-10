@@ -36,7 +36,7 @@ Route::prefix('v1')->group(function () {
     Route::get('resenas', [ResenaController::class, 'index']);
     Route::get('resenas/{resena}', [ResenaController::class, 'show']);
 
-    Route::get('producciones/top-critica', [ProduccionController::class, 'topCritica']);
+    Route::get('ranking-critica', [ProduccionController::class, 'topCritica']);
 });
 
 // 🔐 RUTAS PROTEGIDAS (requieren auth:sanctum)
