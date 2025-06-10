@@ -37,6 +37,8 @@ Route::prefix('v1')->group(function () {
     Route::get('resenas/{resena}', [ResenaController::class, 'show']);
 
     Route::get('ranking-critica', [ProduccionController::class, 'topCritica']);
+
+    Route::get('listasPersonalizadas', [ProduccionController::class, 'index']);
 });
 
 // 🔐 RUTAS PROTEGIDAS (requieren auth:sanctum)
@@ -76,7 +78,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::apiResource('marcarProducciones', MarcarProduccionesController::class);
 
     // LISTAS PERSONALIZADAS
-    Route::apiResource('listasPersonalizadas', ListaPersonalizadaController::class);
+    Route::apiResource('listasPersonalizadas', ListaPersonalizadaController::class)->except(['index']);
 
     // PRODUCCIONES LISTAS
     Route::apiResource('produccionesListas', ProduccionListaController::class);
