@@ -37,6 +37,6 @@ class ListaPersonalizada extends Model
      */
     public function produccionesListas()
     {
-        return $this->hasMany(Produccion::class); 
+        return $this->hasMany(ProduccionLista::class); 
     }
 }
