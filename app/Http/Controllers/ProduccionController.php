@@ -51,6 +51,27 @@ class ProduccionController extends Controller
     
         return ProduccionResource::collection($producciones->get());
     }
+
+    /**
+     * Obtiene las últimas 5 producciones estrenadas.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function ultimosEstrenos(Request $request)
+    {
+        $filter = new ProduccionFilter();
+        $queryItems = $filter->transform($request);
+
+        $producciones = Produccion::where($queryItems)
+            ->orderByDesc('fecha_estreno')
+            ->limit(5);
+
+        if ($request->query('includeGeneros')) {
+            $producciones->with('genero');
+        }
+
+        return ProduccionResource::collection($producciones->get());
+    }
     
     /**
      * Show the form for creating a new resource.
