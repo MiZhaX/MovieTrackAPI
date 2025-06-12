@@ -17,6 +17,7 @@ use App\Http\Controllers\ListaPersonalizadaController;
 use App\Http\Controllers\MarcarProduccionesController;
 use App\Http\Controllers\ProduccionListaController;
 use App\Http\Controllers\ResenaController;
+use App\Http\Controllers\MailController;
 
 // 🟢 RUTAS PÚBLICAS (solo lectura)
 Route::prefix('v1')->group(function () {
@@ -38,6 +39,8 @@ Route::prefix('v1')->group(function () {
 
     Route::get('ranking-critica', [ProduccionController::class, 'topCritica']);
     Route::get('estrenos', [ProduccionController::class, 'ultimosEstrenos']);
+    
+    Route::post('/recomendarPelicula', [MailController::class, 'recomendarPelicula']);
 });
 
 // 🔐 RUTAS PROTEGIDAS (requieren auth:sanctum)
