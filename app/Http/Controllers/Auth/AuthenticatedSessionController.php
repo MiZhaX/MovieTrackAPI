@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request): JsonResponse
     {
-        $request->user()->tokens()->delete(); // Revoca todos los tokens
+        $request->user()->currentAccessToken()->delete(); 
 
         return response()->json([
             'message' => 'Sesión cerrada correctamente',
