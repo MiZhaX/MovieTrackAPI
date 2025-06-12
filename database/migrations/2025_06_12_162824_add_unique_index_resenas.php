@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('resenas', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('usuario_id')->constrained('users');
-            $table->foreignId('produccion_id')->constrained('producciones');
-            $table->float('puntuacion');
-            $table->text('descripcion')->nullable();
-            $table->timestamps();
+        Schema::table('resenas', function (Blueprint $table) {
+            $table->unique(['usuario_id', 'produccion_id']);
         });
     }
 
@@ -30,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('resenas');
+        Schema::table('resenas', function (Blueprint $table) {
+            $table->dropUnique(['usuario_id', 'produccion_id']);
+        });
     }
 };
