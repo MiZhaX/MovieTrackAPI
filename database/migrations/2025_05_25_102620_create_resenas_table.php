@@ -20,6 +20,7 @@ return new class extends Migration
             $table->float('puntuacion');
             $table->text('descripcion')->nullable();
             $table->timestamps();
+            $table->unique(['usuario_id', 'produccion_id']);
         });
     }
 
