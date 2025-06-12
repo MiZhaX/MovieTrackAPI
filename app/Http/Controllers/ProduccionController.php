@@ -64,7 +64,7 @@ class ProduccionController extends Controller
 
         $producciones = Produccion::where($queryItems)
             ->orderByDesc('fecha_estreno')
-            ->limit(5);
+            ->limit(6);
 
         if ($request->query('includeGeneros')) {
             $producciones->with('genero');
