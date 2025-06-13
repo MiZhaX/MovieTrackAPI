@@ -32,6 +32,25 @@ class ResenaController extends Controller
     }
 
     /**
+     * Devuelve 6 reseñas aleatorias de la base de datos.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function reseñasAleatorias(Request $request)
+    {
+        $filter = new ResenaFilter();
+        $queryItems = $filter->transform($request);
+
+        $resenas = Resena::where($queryItems)
+            ->with('usuario') 
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
+        return ResenaResource::collection($resenas);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -100,8 +119,8 @@ class ResenaController extends Controller
             return response()->json(['error' => 'Reseña no encontrada'], 404);
         }
 
-        $validatedData = $request->validated(); 
-        $resena->update($validatedData); 
+        $validatedData = $request->validated();
+        $resena->update($validatedData);
 
         return new ResenaResource($resena);
     }

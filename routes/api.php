@@ -39,8 +39,9 @@ Route::prefix('v1')->group(function () {
 
     Route::get('ranking-critica', [ProduccionController::class, 'topCritica']);
     Route::get('estrenos', [ProduccionController::class, 'ultimosEstrenos']);
-    
+
     Route::post('/recomendarPelicula', [MailController::class, 'recomendarPelicula']);
+    Route::get('/resenasAleatorias', [ResenaController::class, 'reseñasAleatorias']);
 });
 
 // 🔐 RUTAS PROTEGIDAS (requieren auth:sanctum)
