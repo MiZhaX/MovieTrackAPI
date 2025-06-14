@@ -75,7 +75,7 @@ class ListaPersonalizadaController extends Controller
         }
 
         $lista = ListaPersonalizada::with([
-            'produccionesListas'
+            'produccionesListas.produccion'
         ])->find($id); 
 
         if (!$lista) {
