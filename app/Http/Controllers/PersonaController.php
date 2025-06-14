@@ -48,8 +48,10 @@ class PersonaController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('imagen')) {
-            $path = $request->file('imagen')->store('personas', 'public');
-            $data['imagen'] = $path;
+            $uploadedFileUrl = \CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::upload($request->file('imagen')->getRealPath(), [
+                'folder' => 'personas'
+            ])->getSecurePath();
+            $data['imagen'] = $uploadedFileUrl;
         }
 
         return new PersonaResource(Persona::create($data));
@@ -140,8 +142,10 @@ class PersonaController extends Controller
         $validatedData = $request->validated();
 
         if ($request->hasFile('imagen')) {
-            $path = $request->file('imagen')->store('personas', 'public');
-            $validatedData['imagen'] = $path;
+            $uploadedFileUrl = \CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::upload($request->file('imagen')->getRealPath(), [
+                'folder' => 'personas'
+            ])->getSecurePath();
+            $validatedData['imagen'] = $uploadedFileUrl;
         }
 
         $persona->update($validatedData);

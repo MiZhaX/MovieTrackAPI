@@ -94,17 +94,11 @@ class ProduccionController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('poster')) {
-            $path = $request->file('poster')->store('posters', 'public');
-            $data['poster'] = $path;
-        }
-
-        elseif (isset($data['poster']) && str_starts_with($data['poster'], 'data:image')) {
-            $image = $data['poster'];
-            $image = preg_replace('/^data:image\/\w+;base64,/', '', $image);
-            $image = str_replace(' ', '+', $image);
-            $imageName = 'posters/' . uniqid() . '.png';
-            \Illuminate\Support\Facades\Storage::disk('public')->put($imageName, base64_decode($image));
-            $data['poster'] = $imageName;
+            // Cloudinary
+            $uploadedFileUrl = \CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::upload($request->file('poster')->getRealPath(), [
+                'folder' => 'posters'
+            ])->getSecurePath();
+            $data['poster'] = $uploadedFileUrl;
         }
 
         return new ProduccionResource(Produccion::create($data));
@@ -206,6 +200,14 @@ class ProduccionController extends Controller
         }
 
         $validatedData = $request->validated();
+
+        if ($request->hasFile('poster')) {
+            $uploadedFileUrl = \CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::upload($request->file('poster')->getRealPath(), [
+                'folder' => 'posters'
+            ])->getSecurePath();
+            $validatedData['poster'] = $uploadedFileUrl;
+        }
+
         $produccion->update($validatedData);
 
         return new ProduccionResource($produccion);

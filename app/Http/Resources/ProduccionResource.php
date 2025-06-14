@@ -22,7 +22,7 @@ class ProduccionResource extends JsonResource
             'sinopsis' => $this->sinopsis,
             'duracion' => $this->duracion,
             'fecha_estreno' => $this->fecha_estreno,
-            'poster' => $this->poster ? asset('storage/' . $this->poster) : null,
+            'poster' => $this->poster ? $this->poster : null,
             'puntuacion_critica' => $this->puntuacion_critica,
             'puntuacion_usuarios' => $this->puntuacion_usuarios,
             'genero' => new GeneroResource($this->whenLoaded('genero')),
