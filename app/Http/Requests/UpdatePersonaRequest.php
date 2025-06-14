@@ -30,14 +30,16 @@ class UpdatePersonaRequest extends FormRequest
             return [
                 'nombre' => 'required|string|max:255',
                 'fecha_nacimiento' => 'required|date',
-                'biografia' => 'required|string|max:1000'
+                'biografia' => 'required|string|max:1000',
+                'imagen' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             ];
         }
         else {
             return [
                 'nombre' => 'sometimes|string|max:255',
                 'fecha_nacimiento' => 'sometimes|date',
-                'biografia' => 'sometimes|string|max:1000'
+                'biografia' => 'sometimes|string|max:1000',
+                'imagen' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
             ];   
         }
     }

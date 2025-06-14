@@ -17,6 +17,7 @@ class Persona extends Model
         'nombre',
         'fecha_nacimiento',
         'biografia',
+        'imagen',
     ];
 
     /**

@@ -19,6 +19,7 @@ class PersonaResource extends JsonResource
             'nombre' => $this->nombre,
             'fecha_nacimiento' => $this->fecha_nacimiento,
             'biografia' => $this->biografia,
+            'imagen' => $this->imagen ? asset('storage/' . $this->imagen) : null,
 
             'actuaciones' => $this->whenLoaded('actores', function () {
                 return $this->actores->map(function ($actor) {

@@ -28,6 +28,7 @@ class StorePersonaRequest extends FormRequest
             'nombre' => 'required|string|max:255',
             'fecha_nacimiento' => 'required|date',
             'biografia' => 'required|string|max:1000',
+            'imagen' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 }

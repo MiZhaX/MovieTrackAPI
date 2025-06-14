@@ -45,8 +45,14 @@ class PersonaController extends Controller
      */
     public function store(StorePersonaRequest $request)
     {
-        //
-        return new PersonaResource(Persona::create($request->all()));
+        $data = $request->all();
+
+        if ($request->hasFile('imagen')) {
+            $path = $request->file('imagen')->store('personas', 'public');
+            $data['imagen'] = $path;
+        }
+
+        return new PersonaResource(Persona::create($data));
     }
 
     public function bulkStore(Request $request)
@@ -131,8 +137,14 @@ class PersonaController extends Controller
             return response()->json(['error' => 'Persona no encontrada'], 404);
         }
 
-        $validatedData = $request->validated(); 
-        $persona->update($validatedData); 
+        $validatedData = $request->validated();
+
+        if ($request->hasFile('imagen')) {
+            $path = $request->file('imagen')->store('personas', 'public');
+            $validatedData['imagen'] = $path;
+        }
+
+        $persona->update($validatedData);
 
         return new PersonaResource($persona);
     }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nombre')->unique();
             $table->date('fecha_nacimiento');
             $table->text('biografia');
+            $table->string('imagen', 255);
             $table->timestamps();
         });
     }
