@@ -19,6 +19,11 @@ class ImportPosters extends Command
             return;
         }
 
+        // Crear la carpeta de destino si no existe
+        if (!is_dir($dest)) {
+            mkdir($dest, 0777, true);
+        }
+
         foreach (glob($source . '/*.*') as $file) {
             $filename = basename($file);
             copy($file, $dest . '/' . $filename);
