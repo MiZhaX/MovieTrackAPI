@@ -24,7 +24,7 @@ class ProduccionController extends Controller
         //
         $filter = new ProduccionFilter();
         $query = Produccion::query();
-        
+
         $producciones = $filter->transformProduction($request, $query);
         $producciones = $producciones->with('genero');
 
@@ -40,15 +40,15 @@ class ProduccionController extends Controller
     {
         $filter = new ProduccionFilter();
         $queryItems = $filter->transform($request);
-    
+
         $producciones = Produccion::where($queryItems)
             ->orderByDesc('puntuacion_critica')
             ->limit(10);
-    
+
         if ($request->query('includeGeneros')) {
             $producciones->with('genero');
         }
-    
+
         return ProduccionResource::collection($producciones->get());
     }
 
@@ -72,7 +72,7 @@ class ProduccionController extends Controller
 
         return ProduccionResource::collection($producciones->get());
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -91,8 +91,23 @@ class ProduccionController extends Controller
      */
     public function store(StoreProduccionRequest $request)
     {
-        //
-        return new ProduccionResource(Produccion::create($request->all()));
+        $data = $request->all();
+
+        if ($request->hasFile('poster')) {
+            $path = $request->file('poster')->store('posters', 'public');
+            $data['poster'] = $path;
+        }
+
+        elseif (isset($data['poster']) && str_starts_with($data['poster'], 'data:image')) {
+            $image = $data['poster'];
+            $image = preg_replace('/^data:image\/\w+;base64,/', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'posters/' . uniqid() . '.png';
+            \Illuminate\Support\Facades\Storage::disk('public')->put($imageName, base64_decode($image));
+            $data['poster'] = $imageName;
+        }
+
+        return new ProduccionResource(Produccion::create($data));
     }
 
     public function bulkStore(Request $request)
@@ -105,12 +120,11 @@ class ProduccionController extends Controller
 
         $data = $request->all();
 
-        // Validar que sea un array de elementos
         if (!is_array($data)) {
             return response()->json(['error' => 'El formato debe ser un array de objetos.'], 422);
         }
 
-        foreach ($data as $index => $item) {
+        foreach ($data as $index => &$item) {
             $validator = Validator::make($item, [
                 'titulo' => 'required|string|max:255',
                 'tipo' => ['required', 'string', Rule::in(['pelicula', 'serie'])],
@@ -118,7 +132,7 @@ class ProduccionController extends Controller
                 'sinopsis' => 'required|string|max:1000',
                 'duracion' => 'required|integer|min:1',
                 'fecha_estreno' => 'required|date',
-                'poster' => 'required|string|max:255',
+                'poster' => 'required',
                 'puntuacion_critica' => 'required|numeric|min:0|max:10',
                 'puntuacion_usuarios' => 'required|numeric|min:0|max:5'
             ]);
@@ -129,9 +143,18 @@ class ProduccionController extends Controller
                     'details' => $validator->errors()
                 ], 422);
             }
+
+            if (isset($item['poster']) && str_starts_with($item['poster'], 'data:image')) {
+                $image = $item['poster'];
+                $image = preg_replace('/^data:image\/\w+;base64,/', '', $image);
+                $image = str_replace(' ', '+', $image);
+                $imageName = 'posters/' . uniqid() . '.png';
+                \Illuminate\Support\Facades\Storage::disk('public')->put($imageName, base64_decode($image));
+                $item['poster'] = $imageName;
+            }
         }
 
-        $inserted = Produccion::insert($data);
+        Produccion::insert($data);
 
         return response()->json(['message' => 'Producciones insertadas correctamente.'], 201);
     }

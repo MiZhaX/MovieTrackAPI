@@ -21,7 +21,11 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        $token = $user->createToken('loggedUser', ['updateResenas','createResena','añadirProduccionLista', 'eliminarProduccionLista'])->plainTextToken;
+        if ($user->email === 'mbonelortiz@gmail.com') {
+            $token = $user->createToken('adminUser', ['*'])->plainTextToken;
+        } else {
+            $token = $user->createToken('loggedUser', ['updateResenas','createResena','añadirProduccionLista', 'eliminarProduccionLista'])->plainTextToken;
+        }
 
         return response()->json([
             'message' => 'Inicio de sesión exitoso',
