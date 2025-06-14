@@ -28,11 +28,15 @@ class ApiFilter
                 }
 
                 $operatorSymbol = $this->operatorMap[$operator];
-                $filterValue = $operatorSymbol === 'like'
-                    ? '%' . $value[$operator] . '%'
-                    : $value[$operator];
 
-                $query[] = [$column, $operatorSymbol, $filterValue];
+                if ($column === 'nombre' && $operatorSymbol === 'like') {
+                    $query[] = ['nombre', 'like', '%' . $value['like'] . '%'];
+                } else {
+                    $filterValue = $operatorSymbol === 'like'
+                        ? '%' . $value[$operator] . '%'
+                        : $value[$operator];
+                    $query[] = [$column, $operatorSymbol, $filterValue];
+                }
             }
         }
 

@@ -6,7 +6,7 @@ use App\Filters\ApiFilter;
 class PersonaFilter extends ApiFilter {
 
     protected $safeParams = [
-        'nombre' => ['eq'],
+        'nombre' => ['eq', 'like'],
         'fecha_nacimiento' => ['eq', 'gt', 'lt']
     ];
     protected $columnMap = [];
@@ -15,6 +15,7 @@ class PersonaFilter extends ApiFilter {
         'lt' => '<',
         'lte' => '<=',
         'gt' => '>',
-        'gte' => '>='
+        'gte' => '>=',
+        'like' => 'like'
     ];
 }
