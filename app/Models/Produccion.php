@@ -16,7 +16,7 @@ class Produccion extends Model
 
     protected $fillable = [
         'titulo',
-        'titulo__original',
+        'titulo_original',
         'tipo',
         'genero_id',
         'sinopsis',
