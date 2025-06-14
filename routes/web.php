@@ -21,23 +21,3 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/setup', function(){
-    $credential = [
-        'email' => "admin@admin.com",
-        'password' => 'password'
-    ];
-    if (!Auth::attempt($credential)) {
-        $user = new \App\Models\User();
-        $user->name = 'Admin';
-        $user->email = $credential['email'];
-        $user->password = Hash::make($credential['password']);
-        $user->save();
-    }
-    if (Auth::attempt($credential)) {
-        $user = Auth::user();
-        $adminToken = $user->createToken('admin-token', ['create', 'update', 'delete']);
-        return [
-            'admin' => $adminToken->plainTextToken,
-        ];
-    }
-});
