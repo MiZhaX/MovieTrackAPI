@@ -42,7 +42,7 @@ class ResenaController extends Controller
         $queryItems = $filter->transform($request);
 
         $resenas = Resena::where($queryItems)
-            ->with('usuario') 
+            ->with('usuario', 'produccion')
             ->inRandomOrder()
             ->limit(6)
             ->get();
