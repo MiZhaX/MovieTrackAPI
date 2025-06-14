@@ -34,7 +34,7 @@ class StoreProduccionRequest extends FormRequest
             'sinopsis' => 'required|string|max:1000',
             'duracion' => 'required|integer|min:1',
             'fecha_estreno' => 'required|date',
-            'poster' => 'required|string|max:255',
+            'poster' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'puntuacion_critica' => 'required|numeric|min:0|max:10',
             'puntuacion_usuarios' => 'required|numeric|min:0|max:5'
         ];

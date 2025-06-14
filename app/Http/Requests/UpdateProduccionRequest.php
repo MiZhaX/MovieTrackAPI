@@ -36,7 +36,7 @@ class UpdateProduccionRequest extends FormRequest
                 'sinopsis' => 'required|string|max:1000',
                 'duracion' => 'required|integer|min:1',
                 'fecha_estreno' => 'required|date',
-                'poster' => 'required|string|max:255',
+                'poster' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
                 'puntuacion_critica' => 'required|numeric|min:0|max:10',
                 'puntuacion_usuarios' => 'required|numeric|min:0|max:5'
             ];
@@ -49,7 +49,7 @@ class UpdateProduccionRequest extends FormRequest
                 'sinopsis' => 'sometimes|required|string|max:1000',
                 'duracion' => 'sometimes|required|integer|min:1',
                 'fecha_estreno' => 'sometimes|required|date',
-                'poster' => 'sometimes|required|string|max:255',
+                'poster' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
                 'puntuacion_critica' => 'sometimes|required|numeric|min:0|max:10',
                 'puntuacion_usuarios' => 'sometimes|required|numeric|min:0|max:5'
             ];
