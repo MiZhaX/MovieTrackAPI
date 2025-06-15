@@ -232,6 +232,13 @@ class ProduccionController extends Controller
             return response()->json(['error' => 'Producción no encontrada'], 404);
         }
 
+        // Eliminar relaciones en cascada
+        $produccion->actores()->delete();
+        $produccion->directores()->delete();
+        $produccion->resenas()->delete();
+        $produccion->marcarProduccion()->delete();
+        $produccion->produccionLista()->delete();
+
         $produccion->delete();
         return response()->json(['message' => 'Producción eliminada correctamente'], 200);
     }
