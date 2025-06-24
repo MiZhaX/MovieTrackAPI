@@ -1,35 +1,31 @@
-# Etapa 1: Construcción con PHP y Composer
-FROM php:8.2-fpm AS build
-
-RUN apt-get update && apt-get install -y \
-    libzip-dev unzip zip git curl nginx \
-    && docker-php-ext-install pdo_mysql zip
-
-WORKDIR /var/www/html
-
-COPY . .
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-RUN composer install --optimize-autoloader --no-dev
-
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
-
-# Etapa 2: Imagen final con PHP-FPM y Nginx configurado
+# Usa la imagen oficial de PHP con FPM
 FROM php:8.2-fpm
 
-RUN apt-get update && apt-get install -y nginx
+# Instala dependencias del sistema y extensiones PHP necesarias
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    unzip \
+    zip \
+    git \
+    && docker-php-ext-install pdo_mysql zip
 
-COPY --from=build /var/www/html /var/www/html
+# Instala Composer globalmente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copia archivo de configuración nginx
-COPY ./nginx.conf /etc/nginx/sites-enabled/default
+# Establece el directorio de trabajo
+WORKDIR /var/www/html
 
-# Ajusta permisos si hace falta (opcional)
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Copia todos los archivos al contenedor
+COPY . .
 
-# Expone el puerto 80 HTTP para Render
-EXPOSE 80
+# Instala dependencias de PHP con Composer
+RUN composer install --optimize-autoloader --no-dev
 
-# Inicia PHP-FPM y Nginx juntos con supervisord o un script
-CMD service php8.2-fpm start && nginx -g "daemon off;"
+# Corre las optimizaciones de Laravel para producción
+RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+
+# Expone el puerto 9000 para PHP-FPM
+EXPOSE 9000
+
+# Inicia PHP-FPM
+CMD ["php-fpm"]
