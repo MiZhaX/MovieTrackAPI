@@ -173,10 +173,6 @@ class PersonaController extends Controller
             return response()->json(['error' => 'Persona no encontrada'], 404);
         }
 
-        // Eliminar relaciones en cascada
-        $persona->actores()->delete();
-        $persona->directores()->delete();
-
         $persona->delete();
         return response()->json(['message' => 'Persona eliminada correctamente'], 200);
     }
