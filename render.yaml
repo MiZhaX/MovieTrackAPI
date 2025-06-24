@@ -1,4 +1,53 @@
 services:
   - type: web
     name: movietrack-api
+    buildCommand: |
+      composer install --optimize-autoloader --no-dev
+      php artisan config:clear
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
     startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://movietrack.onrender.com
+
+      # Variables dummy para que el archivo sea válido
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: dummy
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_DATABASE
+        value: dummy
+      - key: DB_USERNAME
+        value: dummy
+      - key: DB_PASSWORD
+        value: dummy
+
+      # También para Cloudinary/mail (valores se sobreescriben en el dashboard)
+      - key: CLOUDINARY_URL
+        value: dummy
+      - key: MAIL_MAILER
+        value: smtp
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USERNAME
+        value: dummy
+      - key: MAIL_PASSWORD
+        value: dummy
+      - key: MAIL_ENCRYPTION
+        value: tls
+      - key: MAIL_FROM_ADDRESS
+        value: movietrack@gmail.com
+      - key: MAIL_FROM_NAME
+        value: MovieTrack
