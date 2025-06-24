@@ -1,4 +1,0 @@
-services:
-  - type: web
-    name: movietrack-api
-    startCommand: php artisan serve --host 0.0.0.0 --port 10000
