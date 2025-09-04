@@ -137,7 +137,7 @@ GET    /api/user               (auth)
 ```
 
 ## 📰 Documentación con Swagger
-Al entrar en la URL en producción, verás la documentación realizada con Swagger y podrás probar la API con una interfaz gráfica
+Al entrar en la URL en producción (`https://movietrackapi.up.railway.app`), verás la documentación realizada con Swagger y podrás probar la API con una interfaz gráfica
 
 ## 🧪 Pruebas con Postman
 
